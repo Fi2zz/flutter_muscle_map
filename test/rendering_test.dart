@@ -15,26 +15,35 @@ void main() {
     );
   }
 
-  Offset findPoint(BodyRenderer body, Muscle muscle) {
-    final bounds = body.boundingRect(muscle, size)!;
-    for (var x = bounds.left; x < bounds.right; x += 2) {
-      for (var y = bounds.top; y < bounds.bottom; y += 2) {
-        final point = Offset(x, y);
-        if (body.hitTest(point, size)?.$1 == muscle) return point;
-      }
-    }
-    throw StateError('No point inside ${muscle.name}');
+  Offset viewPoint(Offset svg, BodyGender gender) {
+    final viewBox = BodyPathProvider.viewBox(gender, BodySide.back);
+    final scale = (size.width / viewBox.size.width)
+        .clamp(0.0, size.height / viewBox.size.height);
+    return Offset(
+      (size.width - viewBox.size.width * scale) / 2 +
+          (svg.dx - viewBox.origin.dx) * scale,
+      (size.height - viewBox.size.height * scale) / 2 +
+          (svg.dy - viewBox.origin.dy) * scale,
+    );
   }
 
   for (final gender in BodyGender.values) {
-    test('${gender.name} hidden regions resolve taps to their hosts', () {
-      final visibleBody = renderer(gender, false);
-      final hiddenBody = renderer(gender, true);
-      final rhomboidsPoint = findPoint(visibleBody, Muscle.rhomboids);
-      final rotatorPoint = findPoint(visibleBody, Muscle.rotatorCuff);
+    final left = gender == BodyGender.male
+        ? const Offset(1050, 360)
+        : const Offset(1110, 350);
+    final right = gender == BodyGender.male
+        ? const Offset(1110, 360)
+        : const Offset(1170, 350);
 
-      expect(hiddenBody.hitTest(rhomboidsPoint, size)?.$1, Muscle.trapezius);
-      expect(hiddenBody.hitTest(rotatorPoint, size)?.$1, Muscle.upperBack);
-    });
+    for (final sample in [(left, MuscleSide.left), (right, MuscleSide.right)]) {
+      test('${gender.name} ${sample.$2.name} uses independent coordinates', () {
+        final point = viewPoint(sample.$1, gender);
+        final visibleBody = renderer(gender, false);
+        final hiddenBody = renderer(gender, true);
+
+        expect(visibleBody.hitTest(point, size), (Muscle.rhomboids, sample.$2));
+        expect(hiddenBody.hitTest(point, size), (Muscle.trapezius, sample.$2));
+      });
+    }
   }
 }

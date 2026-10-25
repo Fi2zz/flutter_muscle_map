@@ -134,6 +134,8 @@ void main() {
 
 `rhomboids` and `rotatorCuff` fall back to `trapezius` and `upperBack` for taps when sub-groups are hidden. Rear deltoid and upper/lower trapezius artwork is available when `hideSubGroups` is false.
 
+Paired muscles expose separate accessibility labels and actions for the left and right sides. Selection and long-press callbacks receive the same muscle and side as touch hit testing.
+
 ### Muscle Enum
 
 22 base muscles: `abs`, `biceps`, `calves`, `chest`, `deltoids`, `feet`, `forearm`, `gluteal`, `hamstring`, `hands`, `head`, `knees`, `lowerBack`, `obliques`, `quadriceps`, `tibialis`, `trapezius`, `triceps`, `upperBack`, `rotatorCuff`, `serratus`, `rhomboids`
@@ -213,6 +215,8 @@ void main() {
 ```
 
 新增 `workoutStepped`（5 级阶梯）和 `thermalSmooth`（缓动）色阶。默认使用色阶自身插值，显式非线性配置优先。隐藏子肌群时，菱形肌和旋转袖肌的点击分别回退到斜方肌和上背。
+
+左右成对肌群分别提供可访问性标签和动作；选择与长按回调返回和触摸命中相同的肌群及侧别。
 
 ### 开源协议
 

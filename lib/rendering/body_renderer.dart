@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../data/models.dart';
 import '../data/path_provider.dart';
 import 'svg_parser.dart';
+import 'muscle_semantics_region.dart';
 
 class PathCache {
   static final Map<String, Path> _cache = {};
@@ -11,8 +12,11 @@ class PathCache {
 
   static int get cachedPathCount => _cache.length;
 
-  Path parsePath(String d) {
-    return _cache.putIfAbsent(d, () => _parser.parse(d));
+  /// Returns a mutable copy by default. Shared paths requested with
+  /// `defensiveCopy: false` must not be mutated.
+  Path parsePath(String d, {bool defensiveCopy = true}) {
+    final path = _cache.putIfAbsent(d, () => _parser.parse(d));
+    return defensiveCopy ? Path.from(path) : path;
   }
 
   /// Parses every body path synchronously into the cache shared by all renderers.
@@ -84,15 +88,14 @@ class BodyRenderer {
 
       final muscle = bodyPart.slug.muscle;
       final highlight = muscle != null ? highlights[muscle] : null;
-      final host =
-          muscle?.regionHost ?? (hideSubGroups ? muscle?.parentGroup : null);
-      final isSelected = muscle != null &&
-          (selectedMuscles.contains(muscle) || selectedMuscles.contains(host));
-      final hostHighlight = host != null ? highlights[host] : null;
+      final selectedHost = hideSubGroups ? muscle?.defaultModeHost : null;
+      final directlySelected =
+          muscle != null && selectedMuscles.contains(muscle);
+      final isSelected = directlySelected ||
+          (selectedHost != null && selectedMuscles.contains(selectedHost));
       final hiddenOverlay = muscle?.overlayRegion == true &&
           highlight == null &&
-          hostHighlight == null &&
-          !isSelected;
+          !directlySelected;
       if (hiddenOverlay) continue;
 
       final fill = _resolveFill(bodyPart.slug, highlight, isSelected);
@@ -107,7 +110,7 @@ class BodyRenderer {
       ];
 
       for (final entry in allPaths) {
-        final path = _pathCache.parsePath(entry.path);
+        final path = _pathCache.parsePath(entry.path, defensiveCopy: false);
 
         // Get bounds in SVG coordinate space for shader
         final bounds = path.getBounds();
@@ -242,22 +245,87 @@ class BodyRenderer {
           hideSubGroups ? muscle.defaultModeHost ?? muscle : muscle;
 
       for (final pathString in bodyPart.left) {
-        final path = _pathCache.parsePath(pathString);
+        final path = _pathCache.parsePath(pathString, defensiveCopy: false);
         if (path.contains(svgPoint)) return (resolvedMuscle, MuscleSide.left);
       }
 
       for (final pathString in bodyPart.right) {
-        final path = _pathCache.parsePath(pathString);
+        final path = _pathCache.parsePath(pathString, defensiveCopy: false);
         if (path.contains(svgPoint)) return (resolvedMuscle, MuscleSide.right);
       }
 
       for (final pathString in bodyPart.common) {
-        final path = _pathCache.parsePath(pathString);
+        final path = _pathCache.parsePath(pathString, defensiveCopy: false);
         if (path.contains(svgPoint)) return (resolvedMuscle, MuscleSide.both);
       }
     }
 
     return null;
+  }
+
+  List<MuscleSemanticsRegion> semanticsRegions(Size size) {
+    final transform = _computeTransform(size);
+    final regions = <MuscleSemanticsRegion>[];
+    for (final bodyPart in BodyPathProvider.paths(gender, side)) {
+      final muscle = bodyPart.slug.muscle;
+      if (muscle == null || muscle.isCosmeticPart) continue;
+      if (hideSubGroups &&
+          muscle.isSubGroup &&
+          !muscle.isAlwaysVisibleSubGroup) {
+        continue;
+      }
+      final selected = selectedMuscles.contains(muscle) ||
+          (hideSubGroups && selectedMuscles.contains(muscle.defaultModeHost));
+      if (muscle.overlayRegion &&
+          !highlights.containsKey(muscle) &&
+          !selectedMuscles.contains(muscle)) {
+        continue;
+      }
+      regions.addAll(_semanticRegionsForPart(
+        bodyPart,
+        transform,
+        selected,
+      ));
+    }
+    return regions;
+  }
+
+  List<MuscleSemanticsRegion> _semanticRegionsForPart(
+    BodyPartPathData bodyPart,
+    _TransformData transform,
+    bool selected,
+  ) {
+    final muscle = bodyPart.slug.muscle!;
+    final resolved = hideSubGroups ? muscle.defaultModeHost ?? muscle : muscle;
+    final entries = [
+      ...bodyPart.common.map((path) => _PathEntry(path, MuscleSide.both)),
+      ...bodyPart.left.map((path) => _PathEntry(path, MuscleSide.left)),
+      ...bodyPart.right.map((path) => _PathEntry(path, MuscleSide.right)),
+    ];
+    final regions = <MuscleSemanticsRegion>[];
+    for (final entry in entries) {
+      final bounds = _pathBounds(entry.path, transform);
+      if (bounds == null) continue;
+      regions.add(MuscleSemanticsRegion(
+        bounds: bounds,
+        muscle: resolved,
+        side: entry.side,
+        selected: selected,
+      ));
+    }
+    return regions;
+  }
+
+  Rect? _pathBounds(String pathString, _TransformData transform) {
+    final bounds =
+        _pathCache.parsePath(pathString, defensiveCopy: false).getBounds();
+    if (bounds.isEmpty) return null;
+    return Rect.fromLTRB(
+      bounds.left * transform.scale + transform.offsetX,
+      bounds.top * transform.scale + transform.offsetY,
+      bounds.right * transform.scale + transform.offsetX,
+      bounds.bottom * transform.scale + transform.offsetY,
+    );
   }
 
   Rect? boundingRect(Muscle muscle, Size size) {
@@ -268,7 +336,7 @@ class BodyRenderer {
     for (final bodyPart in bodyParts) {
       if (bodyPart.slug.muscle != muscle) continue;
       for (final pathString in bodyPart.allPaths) {
-        final path = _pathCache.parsePath(pathString);
+        final path = _pathCache.parsePath(pathString, defensiveCopy: false);
         final rect = path.getBounds();
         if (rect.isEmpty) continue;
         // Transform rect to view coordinates

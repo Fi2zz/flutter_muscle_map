@@ -4,15 +4,20 @@ import 'package:muscle_map/muscle_map.dart';
 void main() {
   setUp(() => PathCache().clear());
 
-  test('path instances are shared across renderer caches', () {
+  test('renderers share paths without exposing mutable cache entries', () {
     const cache = PathCache();
-    final path = BodyPathProvider.paths(BodyGender.male, BodySide.front)
+    final source = BodyPathProvider.paths(BodyGender.male, BodySide.front)
         .first
         .allPaths
         .first;
 
-    expect(identical(cache.parsePath(path), const PathCache().parsePath(path)),
-        isTrue);
+    final shared = cache.parsePath(source);
+    expect(identical(shared, const PathCache().parsePath(source)), isFalse);
+
+    final bounds = shared.getBounds();
+    shared.reset();
+    final subsequent = cache.parsePath(source, defensiveCopy: false);
+    expect(subsequent.getBounds(), bounds);
   });
 
   test('preloadArtwork parses every body path', () {

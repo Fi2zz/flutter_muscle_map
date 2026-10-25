@@ -9,7 +9,9 @@
 - Add `drawable` and `drawableFor` muscle mapping queries
 - Add stepped workout and smooth thermal heatmap scales with correct interpolation precedence
 - Preserve host highlighting and tap fallback for carved and overlay regions
-- Add interaction tests and golden coverage for all body models
+- Add per-side accessibility labels and selection/long-press actions
+- Apply heatmap thresholds before color interpolation
+- Add interaction, semantics, and first-frame golden coverage for all body models
 
 ## 1.0.0
 

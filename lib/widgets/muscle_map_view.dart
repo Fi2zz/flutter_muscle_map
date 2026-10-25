@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../data/models.dart';
 import '../rendering/body_renderer.dart';
+import 'heatmap_mapper.dart';
 
 class MuscleMapView extends StatefulWidget {
   final BodyGender gender;
@@ -174,23 +175,11 @@ class _MuscleMapViewState extends State<MuscleMapView>
       return widget.highlights;
     }
 
-    final config = widget.heatmapConfig ?? const HeatmapConfiguration();
-    final result = Map<Muscle, MuscleHighlight>.of(widget.highlights);
-
-    for (final entry in widget.heatmapData!.entries) {
-      final intensity = config.effectiveInterpolation.apply(entry.value);
-
-      if (intensity < config.threshold) continue;
-
-      final color = config.colorScale.colorForIntensity(intensity);
-      result[entry.key] = MuscleHighlight(
-        muscle: entry.key,
-        color: color,
-        opacity: 0.85,
-      );
-    }
-
-    return result;
+    return buildHeatmapHighlights(
+      data: widget.heatmapData!,
+      config: widget.heatmapConfig ?? const HeatmapConfiguration(),
+      highlights: widget.highlights,
+    );
   }
 
   void _handleTapDown(TapDownDetails details, Size size) {
@@ -267,6 +256,28 @@ class _MuscleMapViewState extends State<MuscleMapView>
     );
   }
 
+  List<Widget> _buildSemantics(Size size) {
+    final regions = _createRenderer(pulseFactor: 1.0).semanticsRegions(size);
+    return regions.map((region) {
+      return Positioned.fromRect(
+        rect: region.bounds,
+        child: Semantics(
+          textDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
+          label: region.label,
+          button: widget.onMuscleSelected != null,
+          selected: region.selected,
+          onTap: widget.onMuscleSelected == null
+              ? null
+              : () => widget.onMuscleSelected!(region.muscle, region.side),
+          onLongPress: widget.onMuscleLongPressed == null
+              ? null
+              : () => widget.onMuscleLongPressed!(region.muscle, region.side),
+          child: const SizedBox.expand(),
+        ),
+      );
+    }).toList();
+  }
+
   Widget _buildInteractiveBody(Size size) {
     Widget body = GestureDetector(
       onTapDown: (d) => _handleTapDown(d, size),
@@ -315,6 +326,11 @@ class _MuscleMapViewState extends State<MuscleMapView>
         ),
       );
     }
+
+    body = Stack(
+      alignment: Alignment.topLeft,
+      children: [body, ..._buildSemantics(size)],
+    );
 
     // Tooltip overlay
     if (widget.tooltipBuilder != null && widget.selectedMuscles.isNotEmpty) {
