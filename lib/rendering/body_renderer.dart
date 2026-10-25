@@ -4,15 +4,26 @@ import '../data/path_provider.dart';
 import 'svg_parser.dart';
 
 class PathCache {
-  final Map<String, Path> _cache = {};
-  final SVGPathParser _parser = SVGPathParser();
+  static final Map<String, Path> _cache = {};
+  static final SVGPathParser _parser = SVGPathParser();
 
-  /// Parse path from SVG string. Paths are in original SVG coordinates.
+  const PathCache();
+
+  static int get cachedPathCount => _cache.length;
+
   Path parsePath(String d) {
-    if (_cache.containsKey(d)) return _cache[d]!;
-    final path = _parser.parse(d);
-    _cache[d] = path;
-    return path;
+    return _cache.putIfAbsent(d, () => _parser.parse(d));
+  }
+
+  /// Parses every body path synchronously into the cache shared by all renderers.
+  void preloadArtwork() {
+    for (final gender in BodyGender.values) {
+      for (final side in BodySide.values) {
+        for (final bodyPart in BodyPathProvider.paths(gender, side)) {
+          bodyPart.allPaths.forEach(parsePath);
+        }
+      }
+    }
   }
 
   void clear() => _cache.clear();
@@ -48,8 +59,10 @@ class BodyRenderer {
     final scaleY = size.height / viewBox.size.height;
     final scale = scaleX < scaleY ? scaleX : scaleY;
 
-    final offsetX = (size.width - viewBox.size.width * scale) / 2 - viewBox.origin.dx * scale;
-    final offsetY = (size.height - viewBox.size.height * scale) / 2 - viewBox.origin.dy * scale;
+    final offsetX = (size.width - viewBox.size.width * scale) / 2 -
+        viewBox.origin.dx * scale;
+    final offsetY = (size.height - viewBox.size.height * scale) / 2 -
+        viewBox.origin.dy * scale;
 
     return _TransformData(scale: scale, offsetX: offsetX, offsetY: offsetY);
   }
@@ -71,15 +84,16 @@ class BodyRenderer {
 
       final muscle = bodyPart.slug.muscle;
       final highlight = muscle != null ? highlights[muscle] : null;
-
-      final isSelected = () {
-        if (muscle == null) return false;
-        if (selectedMuscles.contains(muscle)) return true;
-        if (hideSubGroups && muscle.isAlwaysVisibleSubGroup && muscle.parentGroup != null) {
-          return selectedMuscles.contains(muscle.parentGroup!);
-        }
-        return false;
-      }();
+      final host =
+          muscle?.regionHost ?? (hideSubGroups ? muscle?.parentGroup : null);
+      final isSelected = muscle != null &&
+          (selectedMuscles.contains(muscle) || selectedMuscles.contains(host));
+      final hostHighlight = host != null ? highlights[host] : null;
+      final hiddenOverlay = muscle?.overlayRegion == true &&
+          highlight == null &&
+          hostHighlight == null &&
+          !isSelected;
+      if (hiddenOverlay) continue;
 
       final fill = _resolveFill(bodyPart.slug, highlight, isSelected);
       final highlightOpacity = highlight?.opacity ?? 1.0;
@@ -113,7 +127,9 @@ class BodyRenderer {
           paint.color = fill.solidColor;
         }
 
-        if (needsShadow || needsOpacityLayer || (isSelected && selectionPulseFactor != 1.0)) {
+        if (needsShadow ||
+            needsOpacityLayer ||
+            (isSelected && selectionPulseFactor != 1.0)) {
           canvas.saveLayer(bounds, Paint());
 
           if (needsShadow) {
@@ -122,7 +138,8 @@ class BodyRenderer {
               ..color = style.shadowColor
               ..maskFilter = MaskFilter.blur(
                 BlurStyle.normal,
-                style.shadowRadius / t.scale, // Scale shadow radius back to SVG space
+                style.shadowRadius /
+                    t.scale, // Scale shadow radius back to SVG space
               );
             canvas.save();
             canvas.translate(
@@ -157,7 +174,8 @@ class BodyRenderer {
           final strokePaint = Paint()
             ..style = PaintingStyle.stroke
             ..color = style.strokeColor
-            ..strokeWidth = style.strokeWidth / t.scale; // Scale stroke to SVG space
+            ..strokeWidth =
+                style.strokeWidth / t.scale; // Scale stroke to SVG space
           canvas.drawPath(path, strokePaint);
         }
 
@@ -175,19 +193,20 @@ class BodyRenderer {
     canvas.restore();
   }
 
-  MuscleFill _resolveFill(BodySlug slug, MuscleHighlight? highlight, bool isSelected) {
+  MuscleFill _resolveFill(
+      BodySlug slug, MuscleHighlight? highlight, bool isSelected) {
     if (slug == BodySlug.hair) return SolidMuscleFill(style.hairColor);
     if (slug == BodySlug.head) return SolidMuscleFill(style.headColor);
     if (isSelected) return SolidMuscleFill(style.selectionColor);
-    if (highlight != null) return highlight.fill ?? SolidMuscleFill(highlight.color);
+    if (highlight != null) {
+      return highlight.fill ?? SolidMuscleFill(highlight.color);
+    }
 
-    // Sub-group inheritance
     final muscle = slug.muscle;
-    if (muscle != null && muscle.isSubGroup && muscle.parentGroup != null) {
-      final parentHighlight = highlights[muscle.parentGroup!];
-      if (parentHighlight != null) {
-        return parentHighlight.fill ?? SolidMuscleFill(parentHighlight.color);
-      }
+    final host = muscle?.parentGroup ?? muscle?.regionHost;
+    final parentHighlight = host != null ? highlights[host] : null;
+    if (parentHighlight != null) {
+      return parentHighlight.fill ?? SolidMuscleFill(parentHighlight.color);
     }
 
     return SolidMuscleFill(style.fillColor);
@@ -202,27 +221,25 @@ class BodyRenderer {
 
     final bodyParts = BodyPathProvider.paths(gender, side);
 
-    // Test sub-groups first for priority
     final sortedParts = List<BodyPartPathData>.from(bodyParts)
       ..sort((a, b) {
-        final aIsSub = a.slug.muscle?.isSubGroup ?? false;
-        final bIsSub = b.slug.muscle?.isSubGroup ?? false;
-        if (aIsSub != bIsSub) return aIsSub ? -1 : 1;
-        return 0;
+        final aPriority = a.slug.muscle?.hitTestPriority ?? 0;
+        final bPriority = b.slug.muscle?.hitTestPriority ?? 0;
+        return bPriority.compareTo(aPriority);
       });
 
     for (final bodyPart in sortedParts) {
       final muscle = bodyPart.slug.muscle;
       if (muscle == null) continue;
 
-      if (hideSubGroups && muscle.isSubGroup && !muscle.isAlwaysVisibleSubGroup) continue;
+      if (hideSubGroups &&
+          muscle.isSubGroup &&
+          !muscle.isAlwaysVisibleSubGroup) {
+        continue;
+      }
 
-      final resolvedMuscle = () {
-        if (hideSubGroups && muscle.isAlwaysVisibleSubGroup && muscle.parentGroup != null) {
-          return muscle.parentGroup!;
-        }
-        return muscle;
-      }();
+      final resolvedMuscle =
+          hideSubGroups ? muscle.defaultModeHost ?? muscle : muscle;
 
       for (final pathString in bodyPart.left) {
         final path = _pathCache.parsePath(pathString);
@@ -273,7 +290,8 @@ class _TransformData {
   final double scale;
   final double offsetX;
   final double offsetY;
-  _TransformData({required this.scale, required this.offsetX, required this.offsetY});
+  _TransformData(
+      {required this.scale, required this.offsetX, required this.offsetY});
 }
 
 class _PathEntry {

@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.0
+
+- Sync cross-platform updates from upstream MuscleMap 1.7.0–1.9.0
+- Add real artwork for rhomboids, rotator cuff, rear deltoid, upper/lower trapezius, and female back ankles
+- Redraw front sub-groups from their parent muscle outlines
+- Share parsed paths across renderers and support preloading all artwork
+- Add `drawable` and `drawableFor` muscle mapping queries
+- Add stepped workout and smooth thermal heatmap scales with correct interpolation precedence
+- Preserve host highlighting and tap fallback for carved and overlay regions
+- Add interaction tests and golden coverage for all body models
+
 ## 1.0.0
 
 - Initial release

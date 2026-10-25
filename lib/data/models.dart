@@ -44,62 +44,113 @@ enum Muscle {
 extension MuscleX on Muscle {
   String get rawValue {
     switch (this) {
-      case Muscle.lowerBack: return 'lower-back';
-      case Muscle.upperBack: return 'upper-back';
-      case Muscle.rotatorCuff: return 'rotator-cuff';
-      case Muscle.hipFlexors: return 'hip-flexors';
-      case Muscle.upperChest: return 'upper-chest';
-      case Muscle.lowerChest: return 'lower-chest';
-      case Muscle.innerQuad: return 'inner-quad';
-      case Muscle.outerQuad: return 'outer-quad';
-      case Muscle.upperAbs: return 'upper-abs';
-      case Muscle.lowerAbs: return 'lower-abs';
-      case Muscle.frontDeltoid: return 'front-deltoid';
-      case Muscle.rearDeltoid: return 'rear-deltoid';
-      case Muscle.upperTrapezius: return 'upper-trapezius';
-      case Muscle.lowerTrapezius: return 'lower-trapezius';
-      default: return name;
+      case Muscle.lowerBack:
+        return 'lower-back';
+      case Muscle.upperBack:
+        return 'upper-back';
+      case Muscle.rotatorCuff:
+        return 'rotator-cuff';
+      case Muscle.hipFlexors:
+        return 'hip-flexors';
+      case Muscle.upperChest:
+        return 'upper-chest';
+      case Muscle.lowerChest:
+        return 'lower-chest';
+      case Muscle.innerQuad:
+        return 'inner-quad';
+      case Muscle.outerQuad:
+        return 'outer-quad';
+      case Muscle.upperAbs:
+        return 'upper-abs';
+      case Muscle.lowerAbs:
+        return 'lower-abs';
+      case Muscle.frontDeltoid:
+        return 'front-deltoid';
+      case Muscle.rearDeltoid:
+        return 'rear-deltoid';
+      case Muscle.upperTrapezius:
+        return 'upper-trapezius';
+      case Muscle.lowerTrapezius:
+        return 'lower-trapezius';
+      default:
+        return name;
     }
   }
 
   String get displayName {
     switch (this) {
-      case Muscle.abs: return 'Abs';
-      case Muscle.biceps: return 'Biceps';
-      case Muscle.calves: return 'Calves';
-      case Muscle.chest: return 'Chest';
-      case Muscle.deltoids: return 'Deltoids';
-      case Muscle.feet: return 'Feet';
-      case Muscle.forearm: return 'Forearm';
-      case Muscle.gluteal: return 'Gluteal';
-      case Muscle.hamstring: return 'Hamstring';
-      case Muscle.hands: return 'Hands';
-      case Muscle.head: return 'Head';
-      case Muscle.knees: return 'Knees';
-      case Muscle.lowerBack: return 'Lower Back';
-      case Muscle.obliques: return 'Obliques';
-      case Muscle.quadriceps: return 'Quadriceps';
-      case Muscle.tibialis: return 'Tibialis';
-      case Muscle.trapezius: return 'Trapezius';
-      case Muscle.triceps: return 'Triceps';
-      case Muscle.upperBack: return 'Upper Back';
-      case Muscle.rotatorCuff: return 'Rotator Cuff';
-      case Muscle.serratus: return 'Serratus';
-      case Muscle.rhomboids: return 'Rhomboids';
-      case Muscle.ankles: return 'Ankles';
-      case Muscle.adductors: return 'Adductors';
-      case Muscle.neck: return 'Neck';
-      case Muscle.hipFlexors: return 'Hip Flexors';
-      case Muscle.upperChest: return 'Upper Chest';
-      case Muscle.lowerChest: return 'Lower Chest';
-      case Muscle.innerQuad: return 'Inner Quad';
-      case Muscle.outerQuad: return 'Outer Quad';
-      case Muscle.upperAbs: return 'Upper Abs';
-      case Muscle.lowerAbs: return 'Lower Abs';
-      case Muscle.frontDeltoid: return 'Front Deltoid';
-      case Muscle.rearDeltoid: return 'Rear Deltoid';
-      case Muscle.upperTrapezius: return 'Upper Trapezius';
-      case Muscle.lowerTrapezius: return 'Lower Trapezius';
+      case Muscle.abs:
+        return 'Abs';
+      case Muscle.biceps:
+        return 'Biceps';
+      case Muscle.calves:
+        return 'Calves';
+      case Muscle.chest:
+        return 'Chest';
+      case Muscle.deltoids:
+        return 'Deltoids';
+      case Muscle.feet:
+        return 'Feet';
+      case Muscle.forearm:
+        return 'Forearm';
+      case Muscle.gluteal:
+        return 'Gluteal';
+      case Muscle.hamstring:
+        return 'Hamstring';
+      case Muscle.hands:
+        return 'Hands';
+      case Muscle.head:
+        return 'Head';
+      case Muscle.knees:
+        return 'Knees';
+      case Muscle.lowerBack:
+        return 'Lower Back';
+      case Muscle.obliques:
+        return 'Obliques';
+      case Muscle.quadriceps:
+        return 'Quadriceps';
+      case Muscle.tibialis:
+        return 'Tibialis';
+      case Muscle.trapezius:
+        return 'Trapezius';
+      case Muscle.triceps:
+        return 'Triceps';
+      case Muscle.upperBack:
+        return 'Upper Back';
+      case Muscle.rotatorCuff:
+        return 'Rotator Cuff';
+      case Muscle.serratus:
+        return 'Serratus';
+      case Muscle.rhomboids:
+        return 'Rhomboids';
+      case Muscle.ankles:
+        return 'Ankles';
+      case Muscle.adductors:
+        return 'Adductors';
+      case Muscle.neck:
+        return 'Neck';
+      case Muscle.hipFlexors:
+        return 'Hip Flexors';
+      case Muscle.upperChest:
+        return 'Upper Chest';
+      case Muscle.lowerChest:
+        return 'Lower Chest';
+      case Muscle.innerQuad:
+        return 'Inner Quad';
+      case Muscle.outerQuad:
+        return 'Outer Quad';
+      case Muscle.upperAbs:
+        return 'Upper Abs';
+      case Muscle.lowerAbs:
+        return 'Lower Abs';
+      case Muscle.frontDeltoid:
+        return 'Front Deltoid';
+      case Muscle.rearDeltoid:
+        return 'Rear Deltoid';
+      case Muscle.upperTrapezius:
+        return 'Upper Trapezius';
+      case Muscle.lowerTrapezius:
+        return 'Lower Trapezius';
     }
   }
 
@@ -107,16 +158,26 @@ extension MuscleX on Muscle {
 
   List<Muscle> get subGroups {
     switch (this) {
-      case Muscle.chest: return [Muscle.upperChest, Muscle.lowerChest];
-      case Muscle.quadriceps: return [Muscle.innerQuad, Muscle.outerQuad, Muscle.hipFlexors];
-      case Muscle.abs: return [Muscle.upperAbs, Muscle.lowerAbs];
-      case Muscle.deltoids: return [Muscle.frontDeltoid, Muscle.rearDeltoid];
-      case Muscle.trapezius: return [Muscle.upperTrapezius, Muscle.lowerTrapezius];
-      case Muscle.obliques: return [Muscle.serratus];
-      case Muscle.feet: return [Muscle.ankles];
-      case Muscle.hamstring: return [Muscle.adductors];
-      case Muscle.head: return [Muscle.neck];
-      default: return [];
+      case Muscle.chest:
+        return [Muscle.upperChest, Muscle.lowerChest];
+      case Muscle.quadriceps:
+        return [Muscle.innerQuad, Muscle.outerQuad, Muscle.hipFlexors];
+      case Muscle.abs:
+        return [Muscle.upperAbs, Muscle.lowerAbs];
+      case Muscle.deltoids:
+        return [Muscle.frontDeltoid, Muscle.rearDeltoid];
+      case Muscle.trapezius:
+        return [Muscle.upperTrapezius, Muscle.lowerTrapezius];
+      case Muscle.obliques:
+        return [Muscle.serratus];
+      case Muscle.feet:
+        return [Muscle.ankles];
+      case Muscle.hamstring:
+        return [Muscle.adductors];
+      case Muscle.head:
+        return [Muscle.neck];
+      default:
+        return [];
     }
   }
 
@@ -152,6 +213,26 @@ extension MuscleX on Muscle {
   }
 
   bool get isSubGroup => parentGroup != null;
+
+  Muscle? get regionHost {
+    switch (this) {
+      case Muscle.rhomboids:
+        return Muscle.trapezius;
+      case Muscle.rotatorCuff:
+        return Muscle.upperBack;
+      default:
+        return null;
+    }
+  }
+
+  Muscle? get defaultModeHost {
+    if (isAlwaysVisibleSubGroup) return parentGroup;
+    return regionHost;
+  }
+
+  bool get overlayRegion => this == Muscle.rhomboids;
+
+  int get hitTestPriority => isSubGroup || overlayRegion ? 1 : 0;
 
   bool get isAlwaysVisibleSubGroup {
     switch (this) {
@@ -209,43 +290,80 @@ extension BodySlugX on BodySlug {
   Muscle? get muscle {
     if (this == BodySlug.hair) return null;
     switch (this) {
-      case BodySlug.abs: return Muscle.abs;
-      case BodySlug.biceps: return Muscle.biceps;
-      case BodySlug.calves: return Muscle.calves;
-      case BodySlug.chest: return Muscle.chest;
-      case BodySlug.deltoids: return Muscle.deltoids;
-      case BodySlug.feet: return Muscle.feet;
-      case BodySlug.forearm: return Muscle.forearm;
-      case BodySlug.gluteal: return Muscle.gluteal;
-      case BodySlug.hamstring: return Muscle.hamstring;
-      case BodySlug.hands: return Muscle.hands;
-      case BodySlug.head: return Muscle.head;
-      case BodySlug.knees: return Muscle.knees;
-      case BodySlug.lowerBack: return Muscle.lowerBack;
-      case BodySlug.obliques: return Muscle.obliques;
-      case BodySlug.quadriceps: return Muscle.quadriceps;
-      case BodySlug.tibialis: return Muscle.tibialis;
-      case BodySlug.trapezius: return Muscle.trapezius;
-      case BodySlug.triceps: return Muscle.triceps;
-      case BodySlug.upperBack: return Muscle.upperBack;
-      case BodySlug.rotatorCuff: return Muscle.rotatorCuff;
-      case BodySlug.serratus: return Muscle.serratus;
-      case BodySlug.rhomboids: return Muscle.rhomboids;
-      case BodySlug.ankles: return Muscle.ankles;
-      case BodySlug.adductors: return Muscle.adductors;
-      case BodySlug.neck: return Muscle.neck;
-      case BodySlug.hipFlexors: return Muscle.hipFlexors;
-      case BodySlug.upperChest: return Muscle.upperChest;
-      case BodySlug.lowerChest: return Muscle.lowerChest;
-      case BodySlug.innerQuad: return Muscle.innerQuad;
-      case BodySlug.outerQuad: return Muscle.outerQuad;
-      case BodySlug.upperAbs: return Muscle.upperAbs;
-      case BodySlug.lowerAbs: return Muscle.lowerAbs;
-      case BodySlug.frontDeltoid: return Muscle.frontDeltoid;
-      case BodySlug.rearDeltoid: return Muscle.rearDeltoid;
-      case BodySlug.upperTrapezius: return Muscle.upperTrapezius;
-      case BodySlug.lowerTrapezius: return Muscle.lowerTrapezius;
-      default: return null;
+      case BodySlug.abs:
+        return Muscle.abs;
+      case BodySlug.biceps:
+        return Muscle.biceps;
+      case BodySlug.calves:
+        return Muscle.calves;
+      case BodySlug.chest:
+        return Muscle.chest;
+      case BodySlug.deltoids:
+        return Muscle.deltoids;
+      case BodySlug.feet:
+        return Muscle.feet;
+      case BodySlug.forearm:
+        return Muscle.forearm;
+      case BodySlug.gluteal:
+        return Muscle.gluteal;
+      case BodySlug.hamstring:
+        return Muscle.hamstring;
+      case BodySlug.hands:
+        return Muscle.hands;
+      case BodySlug.head:
+        return Muscle.head;
+      case BodySlug.knees:
+        return Muscle.knees;
+      case BodySlug.lowerBack:
+        return Muscle.lowerBack;
+      case BodySlug.obliques:
+        return Muscle.obliques;
+      case BodySlug.quadriceps:
+        return Muscle.quadriceps;
+      case BodySlug.tibialis:
+        return Muscle.tibialis;
+      case BodySlug.trapezius:
+        return Muscle.trapezius;
+      case BodySlug.triceps:
+        return Muscle.triceps;
+      case BodySlug.upperBack:
+        return Muscle.upperBack;
+      case BodySlug.rotatorCuff:
+        return Muscle.rotatorCuff;
+      case BodySlug.serratus:
+        return Muscle.serratus;
+      case BodySlug.rhomboids:
+        return Muscle.rhomboids;
+      case BodySlug.ankles:
+        return Muscle.ankles;
+      case BodySlug.adductors:
+        return Muscle.adductors;
+      case BodySlug.neck:
+        return Muscle.neck;
+      case BodySlug.hipFlexors:
+        return Muscle.hipFlexors;
+      case BodySlug.upperChest:
+        return Muscle.upperChest;
+      case BodySlug.lowerChest:
+        return Muscle.lowerChest;
+      case BodySlug.innerQuad:
+        return Muscle.innerQuad;
+      case BodySlug.outerQuad:
+        return Muscle.outerQuad;
+      case BodySlug.upperAbs:
+        return Muscle.upperAbs;
+      case BodySlug.lowerAbs:
+        return Muscle.lowerAbs;
+      case BodySlug.frontDeltoid:
+        return Muscle.frontDeltoid;
+      case BodySlug.rearDeltoid:
+        return Muscle.rearDeltoid;
+      case BodySlug.upperTrapezius:
+        return Muscle.upperTrapezius;
+      case BodySlug.lowerTrapezius:
+        return Muscle.lowerTrapezius;
+      default:
+        return null;
     }
   }
 }
@@ -255,8 +373,10 @@ enum BodyGender { male, female }
 extension BodyGenderX on BodyGender {
   String get displayName {
     switch (this) {
-      case BodyGender.male: return 'Male';
-      case BodyGender.female: return 'Female';
+      case BodyGender.male:
+        return 'Male';
+      case BodyGender.female:
+        return 'Female';
     }
   }
 }
@@ -266,8 +386,10 @@ enum BodySide { front, back }
 extension BodySideX on BodySide {
   String get displayName {
     switch (this) {
-      case BodySide.front: return 'Front';
-      case BodySide.back: return 'Back';
+      case BodySide.front:
+        return 'Front';
+      case BodySide.back:
+        return 'Back';
     }
   }
 }
@@ -277,9 +399,12 @@ enum MuscleSide { left, right, both }
 extension MuscleSideX on MuscleSide {
   String get displayName {
     switch (this) {
-      case MuscleSide.left: return 'Left';
-      case MuscleSide.right: return 'Right';
-      case MuscleSide.both: return 'Both';
+      case MuscleSide.left:
+        return 'Left';
+      case MuscleSide.right:
+        return 'Right';
+      case MuscleSide.both:
+        return 'Both';
     }
   }
 }
@@ -397,7 +522,6 @@ class RadialGradientMuscleFill extends MuscleFill {
 
   @override
   Shader? toShader(Rect rect) {
-    final maxRadius = radius * rect.shortestSide;
     return RadialGradient(
       colors: colors,
       center: center,
@@ -424,12 +548,15 @@ enum HeatmapColorScale {
   thermal,
   medical,
   neon,
+  workoutStepped,
+  thermalSmooth,
 }
 
 extension HeatmapColorScaleX on HeatmapColorScale {
   List<Color> get colors {
     switch (this) {
       case HeatmapColorScale.workout:
+      case HeatmapColorScale.workoutStepped:
         return [
           const Color(0xFFE8F5E9),
           const Color(0xFF81C784),
@@ -438,6 +565,7 @@ extension HeatmapColorScaleX on HeatmapColorScale {
           const Color(0xFFB71C1C),
         ];
       case HeatmapColorScale.thermal:
+      case HeatmapColorScale.thermalSmooth:
         return [
           const Color(0xFF0D47A1),
           const Color(0xFF00BCD4),
@@ -464,6 +592,17 @@ extension HeatmapColorScaleX on HeatmapColorScale {
     }
   }
 
+  InterpolationType get interpolation {
+    switch (this) {
+      case HeatmapColorScale.workoutStepped:
+        return InterpolationType.stepped;
+      case HeatmapColorScale.thermalSmooth:
+        return InterpolationType.easeInOut;
+      default:
+        return InterpolationType.linear;
+    }
+  }
+
   Color colorForIntensity(double intensity) {
     final vals = colors;
     if (intensity <= 0) return vals.first;
@@ -476,16 +615,24 @@ extension HeatmapColorScaleX on HeatmapColorScale {
   }
 }
 
-enum InterpolationType { linear, easeIn, easeOut, easeInOut }
+enum InterpolationType { linear, easeIn, easeOut, easeInOut, stepped }
 
 extension InterpolationTypeX on InterpolationType {
   double apply(double t) {
+    final clamped = t.clamp(0.0, 1.0);
     switch (this) {
-      case InterpolationType.linear: return t;
-      case InterpolationType.easeIn: return t * t;
-      case InterpolationType.easeOut: return 1 - (1 - t) * (1 - t);
+      case InterpolationType.linear:
+        return clamped;
+      case InterpolationType.easeIn:
+        return clamped * clamped;
+      case InterpolationType.easeOut:
+        return 1 - (1 - clamped) * (1 - clamped);
       case InterpolationType.easeInOut:
-        return t < 0.5 ? 2 * t * t : 1 - ((-2 * t + 2) * (-2 * t + 2)) / 2;
+        return clamped < 0.5
+            ? 2 * clamped * clamped
+            : 1 - ((-2 * clamped + 2) * (-2 * clamped + 2)) / 2;
+      case InterpolationType.stepped:
+        return ((clamped * 5).floor() / 5).clamp(0.0, 1.0);
     }
   }
 }
@@ -508,6 +655,11 @@ class HeatmapConfiguration {
   });
 
   static const defaults = HeatmapConfiguration();
+
+  InterpolationType get effectiveInterpolation {
+    if (interpolation != InterpolationType.linear) return interpolation;
+    return colorScale.interpolation;
+  }
 }
 
 enum GradientDirection {

@@ -27,7 +27,14 @@ class HeatmapLegend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = colorScale.colors;
+    final config = HeatmapConfiguration(
+      colorScale: colorScale,
+      interpolation: interpolation,
+    );
+    final colors = List<Color>.generate(101, (index) {
+      final intensity = config.effectiveInterpolation.apply(index / 100);
+      return colorScale.colorForIntensity(intensity);
+    });
     final defaultStyle = TextStyle(
       fontSize: 12,
       color: Theme.of(context).textTheme.bodyMedium?.color,
@@ -39,8 +46,7 @@ class HeatmapLegend extends StatelessWidget {
       bar = Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (labelMax != null)
-            Text(labelMax!, style: style),
+          if (labelMax != null) Text(labelMax!, style: style),
           Container(
             width: barThickness,
             height: barLength,
@@ -53,8 +59,7 @@ class HeatmapLegend extends StatelessWidget {
               ),
             ),
           ),
-          if (labelMin != null)
-            Text(labelMin!, style: style),
+          if (labelMin != null) Text(labelMin!, style: style),
         ],
       );
     } else {

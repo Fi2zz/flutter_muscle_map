@@ -154,9 +154,14 @@ class SVGPathParser {
           final x1 = parseNumber(), y1 = parseNumber();
           final x2 = parseNumber(), y2 = parseNumber();
           final x = parseNumber(), y = parseNumber();
-          if (x1 != null && y1 != null && x2 != null && y2 != null && x != null && y != null) {
-            commands.add(_SVGCommand(_SVGCommandType.curveTo,
-                [x1, y1, x2, y2, x, y],
+          if (x1 != null &&
+              y1 != null &&
+              x2 != null &&
+              y2 != null &&
+              x != null &&
+              y != null) {
+            commands.add(_SVGCommand(
+                _SVGCommandType.curveTo, [x1, y1, x2, y2, x, y],
                 relative: isRelative));
           }
           break;
@@ -165,8 +170,8 @@ class SVGPathParser {
           final x2 = parseNumber(), y2 = parseNumber();
           final x = parseNumber(), y = parseNumber();
           if (x2 != null && y2 != null && x != null && y != null) {
-            commands.add(_SVGCommand(_SVGCommandType.smoothCurveTo,
-                [x2, y2, x, y],
+            commands.add(_SVGCommand(
+                _SVGCommandType.smoothCurveTo, [x2, y2, x, y],
                 relative: isRelative));
           }
           break;
@@ -175,8 +180,8 @@ class SVGPathParser {
           final x1 = parseNumber(), y1 = parseNumber();
           final x = parseNumber(), y = parseNumber();
           if (x1 != null && y1 != null && x != null && y != null) {
-            commands.add(_SVGCommand(_SVGCommandType.quadraticCurveTo,
-                [x1, y1, x, y],
+            commands.add(_SVGCommand(
+                _SVGCommandType.quadraticCurveTo, [x1, y1, x, y],
                 relative: isRelative));
           }
           break;
@@ -185,8 +190,8 @@ class SVGPathParser {
           final x = parseNumber();
           final y = parseNumber();
           if (x != null && y != null) {
-            commands.add(_SVGCommand(_SVGCommandType.smoothQuadraticCurveTo,
-                [x, y],
+            commands.add(_SVGCommand(
+                _SVGCommandType.smoothQuadraticCurveTo, [x, y],
                 relative: isRelative));
           }
           break;
@@ -197,8 +202,13 @@ class SVGPathParser {
           final largeArc = parseFlag();
           final sweep = parseFlag();
           final x = parseNumber(), y = parseNumber();
-          if (rx != null && ry != null && angle != null &&
-              largeArc != null && sweep != null && x != null && y != null) {
+          if (rx != null &&
+              ry != null &&
+              angle != null &&
+              largeArc != null &&
+              sweep != null &&
+              x != null &&
+              y != null) {
             commands.add(_SVGCommand(_SVGCommandType.arcTo,
                 [rx, ry, angle, largeArc ? 1.0 : 0.0, sweep ? 1.0 : 0.0, x, y],
                 relative: isRelative));
@@ -311,8 +321,8 @@ class SVGPathParser {
           break;
 
         case _SVGCommandType.smoothCurveTo:
-          final x1 = lastCpx1 != null ? 2 * lastX - lastCpx1! : lastX;
-          final y1 = lastCpy1 != null ? 2 * lastY - lastCpy1! : lastY;
+          final x1 = lastCpx1 != null ? 2 * lastX - lastCpx1 : lastX;
+          final y1 = lastCpy1 != null ? 2 * lastY - lastCpy1 : lastY;
           final x2 = cmd.relative ? lastX + cmd.values[0] : cmd.values[0];
           final y2 = cmd.relative ? lastY + cmd.values[1] : cmd.values[1];
           final x = cmd.relative ? lastX + cmd.values[2] : cmd.values[2];
@@ -341,8 +351,8 @@ class SVGPathParser {
           break;
 
         case _SVGCommandType.smoothQuadraticCurveTo:
-          final x1 = lastQpx1 != null ? 2 * lastX - lastQpx1! : lastX;
-          final y1 = lastQpy1 != null ? 2 * lastY - lastQpy1! : lastY;
+          final x1 = lastQpx1 != null ? 2 * lastX - lastQpx1 : lastX;
+          final y1 = lastQpy1 != null ? 2 * lastY - lastQpy1 : lastY;
           final x = cmd.relative ? lastX + cmd.values[0] : cmd.values[0];
           final y = cmd.relative ? lastY + cmd.values[1] : cmd.values[1];
           path.quadraticBezierTo(x1, y1, x, y);
@@ -364,7 +374,8 @@ class SVGPathParser {
           final x2 = cmd.relative ? lastX + cmd.values[5] : cmd.values[5];
           final y2 = cmd.relative ? lastY + cmd.values[6] : cmd.values[6];
 
-          _arcToBezier(path, lastX, lastY, rx, ry, phi, largeArc, sweep, x2, y2);
+          _arcToBezier(
+              path, lastX, lastY, rx, ry, phi, largeArc, sweep, x2, y2);
 
           lastX = x2;
           lastY = y2;
@@ -442,7 +453,8 @@ class SVGPathParser {
     }
 
     // Split arc into segments if needed (max 90 degrees per segment)
-    final numSegments = (deltaTheta.abs() / (3.141592653589793 / 2.0)).ceil().clamp(1, 4);
+    final numSegments =
+        (deltaTheta.abs() / (3.141592653589793 / 2.0)).ceil().clamp(1, 4);
     final etaStep = deltaTheta / numSegments;
 
     final cosEta = cos(etaStep);
@@ -459,7 +471,9 @@ class SVGPathParser {
       final eqx = cx + rx * nextCosTheta;
       final eqy = cy + ry * nextSinTheta;
 
-      final alpha = sin(etaStep) * (sqrt(4.0 + 3.0 * tan(etaStep / 2.0) * tan(etaStep / 2.0)) - 1.0) / 3.0;
+      final alpha = sin(etaStep) *
+          (sqrt(4.0 + 3.0 * tan(etaStep / 2.0) * tan(etaStep / 2.0)) - 1.0) /
+          3.0;
 
       final c1x = epx - alpha * rx * sinTheta;
       final c1y = epy + alpha * ry * cosTheta;

@@ -122,7 +122,6 @@ class _MuscleMapViewState extends State<MuscleMapView>
   late Animation<double> _pulseAnimation;
   Timer? _longPressTimer;
   bool _isLongPress = false;
-  Offset? _lastTapPosition;
   MuscleSide? _lastSide;
   Muscle? _lastMuscle;
 
@@ -137,8 +136,7 @@ class _MuscleMapViewState extends State<MuscleMapView>
     super.initState();
     _pulseController = AnimationController(
       vsync: this,
-      duration: Duration(
-          milliseconds: (1000 / widget.pulseSpeed).round()),
+      duration: Duration(milliseconds: (1000 / widget.pulseSpeed).round()),
     )..repeat(reverse: true);
 
     _pulseAnimation = Tween<double>(
@@ -180,9 +178,7 @@ class _MuscleMapViewState extends State<MuscleMapView>
     final result = Map<Muscle, MuscleHighlight>.of(widget.highlights);
 
     for (final entry in widget.heatmapData!.entries) {
-      final intensity = config.interpolation.apply(
-        entry.value.clamp(0.0, 1.0),
-      );
+      final intensity = config.effectiveInterpolation.apply(entry.value);
 
       if (intensity < config.threshold) continue;
 
@@ -205,7 +201,6 @@ class _MuscleMapViewState extends State<MuscleMapView>
     if (result != null) {
       _lastMuscle = result.$1;
       _lastSide = result.$2;
-      _lastTapPosition = details.localPosition;
 
       if (widget.onMuscleLongPressed != null) {
         _longPressTimer?.cancel();
@@ -277,8 +272,12 @@ class _MuscleMapViewState extends State<MuscleMapView>
       onTapDown: (d) => _handleTapDown(d, size),
       onTapUp: (d) => _handleTapUp(d, size),
       onTapCancel: () => _longPressTimer?.cancel(),
-      onPanStart: widget.onMuscleDragged != null ? (d) => _handlePanStart(d, size) : null,
-      onPanUpdate: widget.onMuscleDragged != null ? (d) => _handlePanUpdate(d, size) : null,
+      onPanStart: widget.onMuscleDragged != null
+          ? (d) => _handlePanStart(d, size)
+          : null,
+      onPanUpdate: widget.onMuscleDragged != null
+          ? (d) => _handlePanUpdate(d, size)
+          : null,
       onPanEnd: widget.onMuscleDragged != null ? _handlePanEnd : null,
       child: widget.isPulseEnabled
           ? AnimatedBuilder(

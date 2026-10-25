@@ -12,8 +12,9 @@ Ported from the original [MuscleMap SwiftUI SDK](https://github.com/melihcolpan/
 | **36 Muscle Groups** | 22 base + 14 sub-groups with left/right detection |
 | **4 Body Models** | Male/Female x Front/Back views |
 | **Muscle Highlighting** | Solid colors, linear gradients, radial gradients |
-| **Heatmap** | 4 color scales (workout, thermal, medical, neon) |
+| **Heatmap** | 6 color scales with linear, eased, and stepped interpolation |
 | **4 Visual Styles** | Default, minimal, neon, medical |
+| **Performance** | Shared path cache and artwork preloading |
 | **Gestures** | Tap selection, long-press, drag-to-select, pinch-to-zoom |
 | **Animations** | Smooth transition and pulse effects |
 | **Tooltips** | Custom tooltip builder for selected muscles |
@@ -112,6 +113,26 @@ MuscleMapView(
 - `HeatmapColorScale.thermal` - Blue to Red
 - `HeatmapColorScale.medical` - Light to Dark blue
 - `HeatmapColorScale.neon` - Neon colors on dark background
+- `HeatmapColorScale.workoutStepped` - Workout colors with 5 discrete steps
+- `HeatmapColorScale.thermalSmooth` - Thermal colors with ease-in-out interpolation
+
+A scale's own interpolation is used by default. An explicit non-linear `HeatmapConfiguration.interpolation` overrides it.
+
+### Drawability and Preloading
+
+```dart
+Muscle.rhomboids.drawable; // true when any body view contains the muscle
+Muscle.rhomboids.drawableFor(BodyGender.male, BodySide.back); // true
+Muscle.head.drawableFor(BodyGender.female, BodySide.back); // false
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  const PathCache().preloadArtwork();
+  runApp(const App());
+}
+```
+
+`rhomboids` and `rotatorCuff` fall back to `trapezius` and `upperBack` for taps when sub-groups are hidden. Rear deltoid and upper/lower trapezius artwork is available when `hideSubGroups` is false.
 
 ### Muscle Enum
 
@@ -146,8 +167,9 @@ MIT License
 | **36 个肌肉组** | 22 个基础 + 14 个子肌群，支持左右检测 |
 | **4 种身体模型** | 男性/女性 x 正面/背面 |
 | **肌肉高亮** | 纯色、线性渐变、径向渐变 |
-| **热力图** | 4 种配色方案（运动、热力、医学、霓虹） |
+| **热力图** | 6 种配色方案，支持线性、缓动和阶梯插值 |
 | **4 种视觉风格** | 默认、极简、霓虹、医学 |
+| **性能** | 共享路径缓存与图形预加载 |
 | **手势交互** | 点击选择、长按、拖拽多选、捏合缩放 |
 | **动画效果** | 平滑过渡和脉冲发光效果 |
 | **工具提示** | 自定义选中肌肉提示框 |
@@ -176,6 +198,21 @@ MuscleMapView(
   },
 )
 ```
+
+### 可绘制性与预加载
+
+```dart
+Muscle.rhomboids.drawable;
+Muscle.rhomboids.drawableFor(BodyGender.male, BodySide.back);
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  const PathCache().preloadArtwork();
+  runApp(const App());
+}
+```
+
+新增 `workoutStepped`（5 级阶梯）和 `thermalSmooth`（缓动）色阶。默认使用色阶自身插值，显式非线性配置优先。隐藏子肌群时，菱形肌和旋转袖肌的点击分别回退到斜方肌和上背。
 
 ### 开源协议
 

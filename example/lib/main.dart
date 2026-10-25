@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:muscle_map/muscle_map.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  const PathCache().preloadArtwork();
   runApp(const DemoApp());
 }
 
@@ -105,11 +107,20 @@ class HighlightDemo extends StatelessWidget {
                       gender: BodyGender.male,
                       side: BodySide.front,
                       highlights: {
-                        Muscle.chest: const MuscleHighlight(muscle: Muscle.chest, color: Colors.red),
-                        Muscle.biceps: const MuscleHighlight(muscle: Muscle.biceps, color: Colors.orange, opacity: 0.8),
-                        Muscle.abs: const MuscleHighlight(muscle: Muscle.abs, color: Colors.yellow, opacity: 0.6),
-                        Muscle.quadriceps: const MuscleHighlight(muscle: Muscle.quadriceps, color: Colors.red),
-                        Muscle.deltoids: const MuscleHighlight(muscle: Muscle.deltoids, color: Colors.orange),
+                        Muscle.chest: const MuscleHighlight(
+                            muscle: Muscle.chest, color: Colors.red),
+                        Muscle.biceps: const MuscleHighlight(
+                            muscle: Muscle.biceps,
+                            color: Colors.orange,
+                            opacity: 0.8),
+                        Muscle.abs: const MuscleHighlight(
+                            muscle: Muscle.abs,
+                            color: Colors.yellow,
+                            opacity: 0.6),
+                        Muscle.quadriceps: const MuscleHighlight(
+                            muscle: Muscle.quadriceps, color: Colors.red),
+                        Muscle.deltoids: const MuscleHighlight(
+                            muscle: Muscle.deltoids, color: Colors.orange),
                       },
                     ),
                   ),
@@ -121,11 +132,16 @@ class HighlightDemo extends StatelessWidget {
                       gender: BodyGender.male,
                       side: BodySide.back,
                       highlights: {
-                        Muscle.trapezius: const MuscleHighlight(muscle: Muscle.trapezius, color: Colors.orange),
-                        Muscle.upperBack: const MuscleHighlight(muscle: Muscle.upperBack, color: Colors.red),
-                        Muscle.lowerBack: const MuscleHighlight(muscle: Muscle.lowerBack, color: Colors.yellow),
-                        Muscle.hamstring: const MuscleHighlight(muscle: Muscle.hamstring, color: Colors.red),
-                        Muscle.gluteal: const MuscleHighlight(muscle: Muscle.gluteal, color: Colors.orange),
+                        Muscle.trapezius: const MuscleHighlight(
+                            muscle: Muscle.trapezius, color: Colors.orange),
+                        Muscle.upperBack: const MuscleHighlight(
+                            muscle: Muscle.upperBack, color: Colors.red),
+                        Muscle.lowerBack: const MuscleHighlight(
+                            muscle: Muscle.lowerBack, color: Colors.yellow),
+                        Muscle.hamstring: const MuscleHighlight(
+                            muscle: Muscle.hamstring, color: Colors.red),
+                        Muscle.gluteal: const MuscleHighlight(
+                            muscle: Muscle.gluteal, color: Colors.orange),
                       },
                     ),
                   ),
@@ -142,10 +158,14 @@ class HighlightDemo extends StatelessWidget {
                       gender: BodyGender.female,
                       side: BodySide.front,
                       highlights: {
-                        Muscle.chest: const MuscleHighlight(muscle: Muscle.chest, color: Colors.pink),
-                        Muscle.abs: const MuscleHighlight(muscle: Muscle.abs, color: Colors.orange),
-                        Muscle.quadriceps: const MuscleHighlight(muscle: Muscle.quadriceps, color: Colors.red),
-                        Muscle.calves: const MuscleHighlight(muscle: Muscle.calves, color: Colors.yellow),
+                        Muscle.chest: const MuscleHighlight(
+                            muscle: Muscle.chest, color: Colors.pink),
+                        Muscle.abs: const MuscleHighlight(
+                            muscle: Muscle.abs, color: Colors.orange),
+                        Muscle.quadriceps: const MuscleHighlight(
+                            muscle: Muscle.quadriceps, color: Colors.red),
+                        Muscle.calves: const MuscleHighlight(
+                            muscle: Muscle.calves, color: Colors.yellow),
                       },
                     ),
                   ),
@@ -157,9 +177,12 @@ class HighlightDemo extends StatelessWidget {
                       gender: BodyGender.female,
                       side: BodySide.back,
                       highlights: {
-                        Muscle.gluteal: const MuscleHighlight(muscle: Muscle.gluteal, color: Colors.pink),
-                        Muscle.hamstring: const MuscleHighlight(muscle: Muscle.hamstring, color: Colors.red),
-                        Muscle.upperBack: const MuscleHighlight(muscle: Muscle.upperBack, color: Colors.orange),
+                        Muscle.gluteal: const MuscleHighlight(
+                            muscle: Muscle.gluteal, color: Colors.pink),
+                        Muscle.hamstring: const MuscleHighlight(
+                            muscle: Muscle.hamstring, color: Colors.red),
+                        Muscle.upperBack: const MuscleHighlight(
+                            muscle: Muscle.upperBack, color: Colors.orange),
                       },
                     ),
                   ),
@@ -278,8 +301,10 @@ class _InteractiveDemoState extends State<InteractiveDemo> {
                 Expanded(
                   child: SegmentedButton<BodyGender>(
                     segments: const [
-                      ButtonSegment(value: BodyGender.male, label: Text('Male')),
-                      ButtonSegment(value: BodyGender.female, label: Text('Female')),
+                      ButtonSegment(
+                          value: BodyGender.male, label: Text('Male')),
+                      ButtonSegment(
+                          value: BodyGender.female, label: Text('Female')),
                     ],
                     selected: {_gender},
                     onSelectionChanged: (set) {
@@ -291,7 +316,8 @@ class _InteractiveDemoState extends State<InteractiveDemo> {
                 Expanded(
                   child: SegmentedButton<BodySide>(
                     segments: const [
-                      ButtonSegment(value: BodySide.front, label: Text('Front')),
+                      ButtonSegment(
+                          value: BodySide.front, label: Text('Front')),
                       ButtonSegment(value: BodySide.back, label: Text('Back')),
                     ],
                     selected: {_bodySide},
@@ -312,7 +338,10 @@ class _InteractiveDemoState extends State<InteractiveDemo> {
               ),
               child: Text(
                 '${_selectedMuscle!.displayName} (${_selectedSide.displayName})',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
             )
           else
@@ -324,7 +353,8 @@ class _InteractiveDemoState extends State<InteractiveDemo> {
               child: MuscleMapView(
                 gender: _gender,
                 side: _bodySide,
-                selectedMuscles: _selectedMuscle != null ? {_selectedMuscle!} : const {},
+                selectedMuscles:
+                    _selectedMuscle != null ? {_selectedMuscle!} : const {},
                 isPulseEnabled: _selectedMuscle != null,
                 pulseSpeed: 1.2,
                 onMuscleSelected: (muscle, side) {
@@ -381,9 +411,12 @@ class StyleDemo extends StatelessWidget {
               side: BodySide.front,
               style: style,
               highlights: {
-                Muscle.chest: const MuscleHighlight(muscle: Muscle.chest, color: Colors.red),
-                Muscle.biceps: const MuscleHighlight(muscle: Muscle.biceps, color: Colors.orange),
-                Muscle.quadriceps: const MuscleHighlight(muscle: Muscle.quadriceps, color: Colors.red),
+                Muscle.chest: const MuscleHighlight(
+                    muscle: Muscle.chest, color: Colors.red),
+                Muscle.biceps: const MuscleHighlight(
+                    muscle: Muscle.biceps, color: Colors.orange),
+                Muscle.quadriceps: const MuscleHighlight(
+                    muscle: Muscle.quadriceps, color: Colors.red),
               },
             ),
           ),
@@ -483,20 +516,30 @@ class _AnimationDemoState extends State<AnimationDemo> {
 
   final List<Map<Muscle, MuscleHighlight>> _highlightSets = [
     {
-      Muscle.chest: const MuscleHighlight(muscle: Muscle.chest, color: Colors.red),
-      Muscle.biceps: const MuscleHighlight(muscle: Muscle.biceps, color: Colors.orange),
+      Muscle.chest:
+          const MuscleHighlight(muscle: Muscle.chest, color: Colors.red),
+      Muscle.biceps:
+          const MuscleHighlight(muscle: Muscle.biceps, color: Colors.orange),
     },
     {
-      Muscle.abs: const MuscleHighlight(muscle: Muscle.abs, color: Colors.yellow),
-      Muscle.quadriceps: const MuscleHighlight(muscle: Muscle.quadriceps, color: Colors.red),
-      Muscle.deltoids: const MuscleHighlight(muscle: Muscle.deltoids, color: Colors.orange),
+      Muscle.abs:
+          const MuscleHighlight(muscle: Muscle.abs, color: Colors.yellow),
+      Muscle.quadriceps:
+          const MuscleHighlight(muscle: Muscle.quadriceps, color: Colors.red),
+      Muscle.deltoids:
+          const MuscleHighlight(muscle: Muscle.deltoids, color: Colors.orange),
     },
     {
-      Muscle.trapezius: const MuscleHighlight(muscle: Muscle.trapezius, color: Colors.purple),
-      Muscle.upperBack: const MuscleHighlight(muscle: Muscle.upperBack, color: Colors.blue),
-      Muscle.lowerBack: const MuscleHighlight(muscle: Muscle.lowerBack, color: Colors.cyan),
-      Muscle.gluteal: const MuscleHighlight(muscle: Muscle.gluteal, color: Colors.pink),
-      Muscle.hamstring: const MuscleHighlight(muscle: Muscle.hamstring, color: Colors.red),
+      Muscle.trapezius:
+          const MuscleHighlight(muscle: Muscle.trapezius, color: Colors.purple),
+      Muscle.upperBack:
+          const MuscleHighlight(muscle: Muscle.upperBack, color: Colors.blue),
+      Muscle.lowerBack:
+          const MuscleHighlight(muscle: Muscle.lowerBack, color: Colors.cyan),
+      Muscle.gluteal:
+          const MuscleHighlight(muscle: Muscle.gluteal, color: Colors.pink),
+      Muscle.hamstring:
+          const MuscleHighlight(muscle: Muscle.hamstring, color: Colors.red),
     },
   ];
 
@@ -512,14 +555,16 @@ class _AnimationDemoState extends State<AnimationDemo> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () => setState(() => _demoStep = (_demoStep - 1) % _highlightSets.length),
+                  onPressed: () => setState(() =>
+                      _demoStep = (_demoStep - 1) % _highlightSets.length),
                   child: const Text('Previous'),
                 ),
                 const SizedBox(width: 16),
                 Text('Step ${_demoStep + 1}/${_highlightSets.length}'),
                 const SizedBox(width: 16),
                 ElevatedButton(
-                  onPressed: () => setState(() => _demoStep = (_demoStep + 1) % _highlightSets.length),
+                  onPressed: () => setState(() =>
+                      _demoStep = (_demoStep + 1) % _highlightSets.length),
                   child: const Text('Next'),
                 ),
               ],
@@ -573,7 +618,8 @@ class _GestureDemoState extends State<GestureDemo> {
                   children: [
                     if (_lastAction != null)
                       Chip(
-                        label: Text('$_lastAction: ${_lastMuscle?.displayName ?? ""}'),
+                        label: Text(
+                            '$_lastAction: ${_lastMuscle?.displayName ?? ""}'),
                         backgroundColor: Colors.blue.withValues(alpha: 0.2),
                       ),
                     Chip(label: Text('Selected: ${_selectedMuscles.length}')),
@@ -652,7 +698,7 @@ class HeatmapV2Demo extends StatefulWidget {
 
 class _HeatmapV2DemoState extends State<HeatmapV2Demo> {
   HeatmapColorScale _scale = HeatmapColorScale.workout;
-  final InterpolationType _interp = InterpolationType.easeInOut;
+  final InterpolationType _interp = InterpolationType.linear;
   double _threshold = 0.1;
 
   final Map<Muscle, double> _data = {
@@ -683,10 +729,18 @@ class _HeatmapV2DemoState extends State<HeatmapV2Demo> {
               children: [
                 SegmentedButton<HeatmapColorScale>(
                   segments: const [
-                    ButtonSegment(value: HeatmapColorScale.workout, label: Text('Workout')),
-                    ButtonSegment(value: HeatmapColorScale.thermal, label: Text('Thermal')),
-                    ButtonSegment(value: HeatmapColorScale.medical, label: Text('Medical')),
-                    ButtonSegment(value: HeatmapColorScale.neon, label: Text('Neon')),
+                    ButtonSegment(
+                        value: HeatmapColorScale.workout,
+                        label: Text('Workout')),
+                    ButtonSegment(
+                        value: HeatmapColorScale.thermal,
+                        label: Text('Thermal')),
+                    ButtonSegment(
+                        value: HeatmapColorScale.workoutStepped,
+                        label: Text('Stepped')),
+                    ButtonSegment(
+                        value: HeatmapColorScale.thermalSmooth,
+                        label: Text('Smooth')),
                   ],
                   selected: {_scale},
                   onSelectionChanged: (set) {
@@ -781,7 +835,10 @@ class _SubGroupsDemoState extends State<SubGroupsDemo> {
                 children: [
                   Text(
                     _selectedMuscle!.displayName,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   if (_selectedMuscle!.subGroups.isNotEmpty)
                     Text(
@@ -799,14 +856,20 @@ class _SubGroupsDemoState extends State<SubGroupsDemo> {
                 gender: BodyGender.male,
                 side: BodySide.front,
                 hideSubGroups: _hideSubGroups,
-                selectedMuscles: _selectedMuscle != null ? {_selectedMuscle!} : const {},
+                selectedMuscles:
+                    _selectedMuscle != null ? {_selectedMuscle!} : const {},
                 onMuscleSelected: (muscle, side) {
                   setState(() => _selectedMuscle = muscle);
                 },
                 highlights: {
-                  Muscle.chest: const MuscleHighlight(muscle: Muscle.chest, color: Colors.red, opacity: 0.5),
-                  Muscle.quadriceps: const MuscleHighlight(muscle: Muscle.quadriceps, color: Colors.orange, opacity: 0.5),
-                  Muscle.abs: const MuscleHighlight(muscle: Muscle.abs, color: Colors.yellow, opacity: 0.5),
+                  Muscle.chest: const MuscleHighlight(
+                      muscle: Muscle.chest, color: Colors.red, opacity: 0.5),
+                  Muscle.quadriceps: const MuscleHighlight(
+                      muscle: Muscle.quadriceps,
+                      color: Colors.orange,
+                      opacity: 0.5),
+                  Muscle.abs: const MuscleHighlight(
+                      muscle: Muscle.abs, color: Colors.yellow, opacity: 0.5),
                 },
               ),
             ),
@@ -820,6 +883,7 @@ class _SubGroupsDemoState extends State<SubGroupsDemo> {
 Widget _sectionTitle(String text) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 16),
-    child: Text(text, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+    child: Text(text,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
   );
 }

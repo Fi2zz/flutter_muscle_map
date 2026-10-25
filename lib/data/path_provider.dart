@@ -4,6 +4,21 @@ import 'malebackpaths.dart';
 import 'femalefrontpaths.dart';
 import 'femalebackpaths.dart';
 
+extension MuscleDrawableX on Muscle {
+  /// Whether at least one body model contains artwork for this muscle.
+  bool get drawable {
+    return BodyGender.values.any((gender) {
+      return BodySide.values.any((side) => drawableFor(gender, side));
+    });
+  }
+
+  /// Whether the specified body model contains artwork for this muscle.
+  bool drawableFor(BodyGender gender, BodySide side) {
+    return BodyPathProvider.paths(gender, side)
+        .any((bodyPart) => bodyPart.slug.muscle == this);
+  }
+}
+
 class BodyPathProvider {
   static List<BodyPartPathData> paths(BodyGender gender, BodySide side) {
     switch ((gender, side)) {
